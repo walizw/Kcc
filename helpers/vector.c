@@ -2,17 +2,16 @@
 
 #include <assert.h>
 #include <memory.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-static bool
+static _Bool
 vector_in_bounds_for_at (struct vector *vector, int index)
 {
   return (index >= 0 && index < vector->rindex);
 }
 
-static bool
+static _Bool
 vector_in_bounds_for_pop (struct vector *vector, int index)
 {
   return (index >= 0 && index < vector->mindex);
@@ -468,7 +467,7 @@ vector_data_ptr (struct vector *vector)
   return vector->data;
 }
 
-bool
+_Bool
 vector_empty (struct vector *vector)
 {
   return vector_count (vector) == 0;

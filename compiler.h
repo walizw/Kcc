@@ -3,6 +3,50 @@
 
 #include <stdio.h>
 
+struct pos
+{
+  // store the position we are at
+  int line;
+  int col;
+  const char *fname;
+};
+
+enum
+{
+  TOKEN_TYPE_IDENTIFIER,
+  TOKEN_TYPE_KEYWORD,
+  TOKEN_TYPE_OPERATOR,
+  TOKEN_TYPE_SYMBOL,
+  TOKEN_TYPE_NUMBER,
+  TOKEN_TYPE_STRING,
+  TOKEN_TYPE_COMMENT,
+  TOKEN_TYPE_NEWLINE
+};
+
+struct token
+{
+  int type;
+  int flags;
+
+  union
+  {
+    char cval;
+    const char *sval;
+    unsigned int inum;
+    unsigned long lnum;
+    unsigned long long llnum;
+    void *any;
+  };
+
+  // is there a whitespace between the token and next token
+  // i.e. * a for operator * whitespace would be set for token "a"
+  _Bool whitespace;
+
+  // if it's between brackets, points to the opening bracket
+  // i.e. (5+10+20) tokens 5, 10 and 20, will point to "("
+  const char *between_brackets;
+};
+
 // This will be used as return codes, if there was an error or if compiling
 // went ok
 enum

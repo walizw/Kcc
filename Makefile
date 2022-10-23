@@ -6,7 +6,7 @@ OBJS=build/compiler.o build/cprocess.o build/helpers/buffer.o \
 INCLUDES=-I./
 
 all: $(OBJS)
-	$(CC) main.c $(OBJS) $(INCLUDES) -g -o main
+	$(CC) main.c $(OBJS) $(INCLUDES) -g -o main.bin
 
 build/compiler.o: compiler.c
 	@$(ECHO) "CC\t\t"$<

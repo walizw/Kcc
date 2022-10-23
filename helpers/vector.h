@@ -1,7 +1,6 @@
 #ifndef __VECTOR_H
 #define __VECTOR_H
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 
@@ -75,7 +74,7 @@ const char *vector_string (struct vector *vec);
 /**
  * Returns true if this vector is empty
  */
-bool vector_empty (struct vector *vector);
+_Bool vector_empty (struct vector *vector);
 void vector_clear (struct vector *vector);
 
 int vector_count (struct vector *vector);

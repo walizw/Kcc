@@ -1,8 +1,8 @@
 CC=gcc
 ECHO=echo
 
-OBJS=build/compiler.o build/cprocess.o build/helpers/buffer.o \
-	build/helpers/vector.o
+OBJS=build/compiler.o build/cprocess.o build/lex_process.o build/lexer.o \
+	build/helpers/buffer.o build/helpers/vector.o
 INCLUDES=-I./
 
 all: $(OBJS)
@@ -13,6 +13,14 @@ build/compiler.o: compiler.c
 	@$(CC) $(INCLUDES) $< -o $@ -g -c
 
 build/cprocess.o: cprocess.c
+	@$(ECHO) "CC\t\t"$<
+	@$(CC) $(INCLUDES) $< -o $@ -g -c
+
+build/lex_process.o: lex_process.c
+	@$(ECHO) "CC\t\t"$<
+	@$(CC) $(INCLUDES) $< -o $@ -g -c
+
+build/lexer.o: lexer.c
 	@$(ECHO) "CC\t\t"$<
 	@$(CC) $(INCLUDES) $< -o $@ -g -c
 

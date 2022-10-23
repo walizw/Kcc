@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 
+#include "helpers/vector.h"
+
 struct pos
 {
   // store the position we are at
@@ -54,7 +56,38 @@ struct token
   const char *between_brackets;
 };
 
-// This will be used as return codes, if there was an error or if compiling
+struct lex_process;
+typedef char (*LEX_PROCESS_NEXT_CHAR) (struct lex_process *process);
+typedef char (*LEX_PROCESS_PEEK_CHAR) (struct lex_process *process);
+typedef void (*LEX_PROCESS_PUSH_CHAR) (struct lex_process *process, char c);
+
+struct lex_process_functions
+{
+  LEX_PROCESS_NEXT_CHAR next_char;
+  LEX_PROCESS_PEEK_CHAR peek_char;
+  LEX_PROCESS_PUSH_CHAR push_char;
+};
+
+struct lex_process
+{
+
+  struct pos pos;
+  struct vector *token_vec;
+  struct compile_process *compiler;
+
+  /*
+   * number of brackets, in ((60)) for example, it'd be 2
+   */
+  int current_expression_count;
+  struct buffer *parentheses_buffer;
+  struct lex_process_functions *function;
+
+  // point to private data that the lexer does not understand, but the person
+  // using the lexer does.
+  void *private;
+};
+
+// this will be used as return codes, if there was an error or if compiling
 // went ok
 enum
 {
@@ -62,11 +95,18 @@ enum
   COMPILER_FAILED_WITH_ERRORS
 };
 
+enum
+{
+  LEXICAL_ANALYSIS_ALL_OK,
+  LEXICAL_ANALYSIS_INPUT_ERROR
+};
+
 struct compile_process
 {
-  // This will determine how code must be compiled
+  // this will determine how code must be compiled
   int flags;
 
+  struct pos pos;
   struct compile_process_input_file
   {
     FILE *fp;
@@ -78,8 +118,23 @@ struct compile_process
 
 int compile_file (const char *fname, const char *out_fname, int flags);
 
-// create a populated "compile_process"
+// cprocess
 struct compile_process *
 compile_process_create (const char *fname, const char *out_fname, int flags);
+
+char compile_process_next_char (struct lex_process *lex_process);
+char compile_process_peek_char (struct lex_process *lex_process);
+void compile_process_push_char (struct lex_process *lex_process, char c);
+
+// lex_process
+struct lex_process *
+lex_process_create (struct compile_process *compiler,
+                    struct lex_process_functions *functions, void *private);
+void lex_process_free (struct lex_process *process);
+void *lex_process_private (struct lex_process *process);
+struct vector *lex_process_tokens (struct lex_process *process);
+
+// lexer
+int lex (struct lex_process *process);
 
 #endif

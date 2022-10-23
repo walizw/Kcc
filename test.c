@@ -1,1 +1,1 @@
-420 "Hello, World!" 69 "Helouda here"
+50 + 20 + 10 - 30 * 40 ++10 --

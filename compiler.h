@@ -9,8 +9,12 @@
 #define __COMPILE_H
 
 #include <stdio.h>
+#include <string.h>
 
 #include "helpers/vector.h"
+
+#define S_EQ(str, str2) \
+  (str && str2 && (strcmp (str, str2) == 0))
 
 #define NUMERIC_CASE                                                          \
   case '0':                                                                   \
@@ -23,6 +27,25 @@
   case '7':                                                                   \
   case '8':                                                                   \
   case '9'
+
+#define OPERATOR_CASE_EXCLUDING_DIVISION                                      \
+  case '+':                                                                   \
+  case '-':                                                                   \
+  case '*':                                                                   \
+  case '>':                                                                   \
+  case '<':                                                                   \
+  case '^':                                                                   \
+  case '%':                                                                   \
+  case '!':                                                                   \
+  case '=':                                                                   \
+  case '~':                                                                   \
+  case '|':                                                                   \
+  case '&':                                                                   \
+  case '(':                                                                   \
+  case '[':                                                                   \
+  case ',':                                                                   \
+  case '.':                                                                   \
+  case '?'
 
 struct pos
 {
@@ -151,5 +174,9 @@ struct vector *lex_process_tokens (struct lex_process *process);
 
 // lexer
 int lex (struct lex_process *process);
+
+// token
+_Bool
+token_is_keyword (struct token *token, const char *value);
 
 #endif

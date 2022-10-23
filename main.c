@@ -1,3 +1,9 @@
+/*
+ * main.c - Entry point of Kcc.
+ *
+ * Copyright (C) 2022 walizw <yojan.bustamante@udea.edu.co>
+ */
+
 #include <stdio.h>
 
 #include "compiler.h"

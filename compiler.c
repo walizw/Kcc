@@ -1,3 +1,10 @@
+/*
+ * compiler.c - Compiles a file, passes through all its phases and produces the
+ * output.
+ *
+ * Copyright (C) 2022 walizw <yojan.bustamante@udea.edu.co>
+ */
+
 #include "compiler.h"
 
 int

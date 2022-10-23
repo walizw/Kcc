@@ -1,3 +1,9 @@
+/*
+ * cprocess.c - Creates and handles the compilation process of an input file.
+ *
+ * Copyright (C) 2022 walizw <yojan.bustamante@udea.edu.co>
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 

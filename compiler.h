@@ -1,3 +1,10 @@
+/*
+ * compiler.h - Here are all the function, structures and enums definitions -
+ * yeah, it's all in one file.
+ *
+ * Copyright (C) 2022 walizw <yojan.bustamante@udea.edu.co>
+ */
+
 #ifndef __COMPILER_H
 #define __COMPILE_H
 

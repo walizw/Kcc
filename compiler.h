@@ -12,6 +12,18 @@
 
 #include "helpers/vector.h"
 
+#define NUMERIC_CASE                                                          \
+  case '0':                                                                   \
+  case '1':                                                                   \
+  case '2':                                                                   \
+  case '3':                                                                   \
+  case '4':                                                                   \
+  case '5':                                                                   \
+  case '6':                                                                   \
+  case '7':                                                                   \
+  case '8':                                                                   \
+  case '9'
+
 struct pos
 {
   // store the position we are at
@@ -36,6 +48,7 @@ struct token
 {
   int type;
   int flags;
+  struct pos pos;
 
   union
   {
@@ -116,6 +129,8 @@ struct compile_process
   FILE *out_file;
 };
 
+void compiler_error (struct compile_process *compiler, const char *msg, ...);
+void compiler_warning (struct compile_process *compiler, const char *msg, ...);
 int compile_file (const char *fname, const char *out_fname, int flags);
 
 // cprocess

@@ -1,1 +1,1 @@
-an_identifier identifier1 id2
+int main (void)

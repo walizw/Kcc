@@ -289,6 +289,75 @@ token_make_operator_or_string ()
   return token;
 }
 
+struct token *
+token_make_one_line_comment ()
+{
+  struct buffer *buffer = buffer_create ();
+  char c = 0;
+  LEX_GETC_IF (buffer, c, c != '\n' && c != EOF);
+  return token_create (&(struct token){ .type = TOKEN_TYPE_COMMENT,
+                                        .sval = buffer_ptr (buffer) });
+}
+
+struct token *
+token_make_multiline_comment ()
+{
+  struct buffer *buffer = buffer_create ();
+  char c = 0;
+  while (1)
+    {
+      LEX_GETC_IF (buffer, c, c != '*' && c != EOF);
+      if (c == EOF)
+        {
+          // we never closed the comment, but the file ended
+          compiler_error (lex_process->compiler,
+                          "You didn't close a multiline comment");
+        }
+      else if (c == '*')
+        {
+          // skip the asterisk
+          nextc ();
+
+          if (peekc () == '/')
+            {
+              nextc ();
+              break;
+            }
+        }
+    }
+
+  return token_create (&(struct token){ .type = TOKEN_TYPE_COMMENT,
+                                        .sval = buffer_ptr (buffer) });
+}
+
+struct token *
+handle_comment ()
+{
+  char c = peekc ();
+  if (c == '/')
+    {
+      nextc ();
+      if (peekc () == '/')
+        {
+          nextc ();
+          return token_make_one_line_comment ();
+        }
+      else if (peekc () == '*')
+        {
+          nextc ();
+          return token_make_multiline_comment ();
+        }
+
+      // if we reached this part of the code, it's probably a division what
+      // we're dealing with, instead of a dictionary, so push it back and make
+      // operator
+      pushc ('/');
+      return token_make_operator_or_string ();
+    }
+
+  return NULL;
+}
+
 static struct token *
 token_make_symbol ()
 {
@@ -337,10 +406,11 @@ read_special_token ()
   return NULL;
 }
 
-struct token *token_make_newline ()
+struct token *
+token_make_newline ()
 {
   nextc ();
-  return token_create (&(struct token ){.type=TOKEN_TYPE_NEWLINE});
+  return token_create (&(struct token){ .type = TOKEN_TYPE_NEWLINE });
 }
 
 struct token *
@@ -348,6 +418,11 @@ read_next_token ()
 {
   struct token *token = NULL;
   char c = peekc ();
+
+  token = handle_comment ();
+  if (token)
+    return token;
+
   switch (c)
     {
     NUMERIC_CASE:

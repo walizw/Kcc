@@ -447,6 +447,96 @@ lex_get_escaped_char (char c)
   return co;
 }
 
+void
+lexer_pop_token ()
+{
+  vector_pop (lex_process->token_vec);
+}
+
+_Bool
+is_hex_char (char c)
+{
+  c = tolower (c);
+  return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f');
+}
+
+const char *
+read_hex_number_str ()
+{
+  struct buffer *buffer = buffer_create ();
+  char c = peekc ();
+  LEX_GETC_IF (buffer, c, is_hex_char (c));
+  buffer_write (buffer, 0x00);
+  return buffer_ptr (buffer);
+}
+
+struct token *
+token_make_special_number_hex ()
+{
+  // skip the "x"
+  nextc ();
+
+  unsigned long number = 0;
+  const char *number_str = read_hex_number_str ();
+  number = strtol (number_str, 0, 16);
+  return token_make_number_for_value (number);
+}
+
+void
+lexer_validate_binary_string (const char *str)
+{
+  size_t len = strlen (str);
+  for (int i = 0; i < len; i++)
+    {
+      if (str[i] != '0' && str[i] != '1')
+        compiler_error (lex_process->compiler,
+                        "This is not a valid binary number");
+    }
+}
+
+struct token *
+token_make_special_number_binary ()
+{
+  // skip the "b"
+  nextc ();
+
+  unsigned long number = 0;
+  const char *number_str = read_number_str ();
+  lexer_validate_binary_string (number_str);
+  number = strtol (number_str, 0, 2);
+  return token_make_number_for_value (number);
+}
+
+struct token *
+token_make_special_number ()
+{
+  struct token *token = NULL;
+  struct token *last_token = lexer_last_token ();
+
+  if (!last_token
+      || !(last_token->type == TOKEN_TYPE_NUMBER && last_token->llnum == 0))
+    {
+      // if the last token is not a number and/or its value is not `0', it means we are not dealing with an special number but an identifier instead
+      return token_make_identifier_or_keyword ();
+    }
+
+  lexer_pop_token ();
+
+  char c = peekc ();
+  if (c == 'x')
+    {
+      // hex number
+      token = token_make_special_number_hex ();
+    }
+  else if (c == 'b')
+    {
+      // binary number
+      token = token_make_special_number_binary ();
+    }
+
+  return token;
+}
+
 struct token *
 token_make_quote ()
 {
@@ -492,6 +582,12 @@ read_next_token ()
 
     SYMBOL_CASE:
       token = token_make_symbol ();
+      break;
+
+    case 'x':
+    case 'b':
+      // if it's hex, we've already tokenised the 0
+      token = token_make_special_number ();
       break;
 
     case '"':

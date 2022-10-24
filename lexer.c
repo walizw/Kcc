@@ -317,7 +317,8 @@ token_make_identifier_or_keyword ()
   // check if keyword
   if (is_keyword (buffer_ptr (buffer)))
     {
-      return token_create (&(struct token){.type=TOKEN_TYPE_KEYWORD, .sval=buffer_ptr (buffer)});
+      return token_create (&(struct token){ .type = TOKEN_TYPE_KEYWORD,
+                                            .sval = buffer_ptr (buffer) });
     }
 
   return token_create (&(struct token){ .type = TOKEN_TYPE_IDENTIFIER,
@@ -334,6 +335,12 @@ read_special_token ()
     }
 
   return NULL;
+}
+
+struct token *token_make_newline ()
+{
+  nextc ();
+  return token_create (&(struct token ){.type=TOKEN_TYPE_NEWLINE});
 }
 
 struct token *
@@ -362,8 +369,11 @@ read_next_token ()
       // we don;t care aabout whitespace, ignore them
     case ' ':
     case '\t':
-    case '\n':
       token = handle_whitespace ();
+      break;
+
+    case '\n':
+      token = token_make_newline ();
       break;
 
     case EOF:

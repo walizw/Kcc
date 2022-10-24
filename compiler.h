@@ -47,6 +47,16 @@
   case '.':                                                                   \
   case '?'
 
+#define SYMBOL_CASE                                                           \
+  case '{':                                                                   \
+  case '}': \
+  case ':': \
+  case ';': \
+  case '#': \
+  case '\\': \
+  case ')': \
+  case ']' \
+
 struct pos
 {
   // store the position we are at

@@ -516,7 +516,9 @@ token_make_special_number ()
   if (!last_token
       || !(last_token->type == TOKEN_TYPE_NUMBER && last_token->llnum == 0))
     {
-      // if the last token is not a number and/or its value is not `0', it means we are not dealing with an special number but an identifier instead
+      // if the last token is not a number and/or its value is not `0', it
+      // means we are not dealing with an special number but an identifier
+      // instead
       return token_make_identifier_or_keyword ();
     }
 

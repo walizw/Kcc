@@ -60,6 +60,9 @@ compile_file (const char *fname, const char *out_fname, int flags)
     {
       return COMPILER_FAILED_WITH_ERRORS;
     }
+
+  process->token_vec = lex_process->token_vec;
+
   // TODO: Parsing
 
   // TODO: Code generation

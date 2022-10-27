@@ -123,11 +123,35 @@ read_number ()
   return atoll (s);
 }
 
+int
+lexer_number_type (char c)
+{
+  int res = NUMBER_TYPE_NORMAL;
+
+  if (c == 'L')
+    {
+      res = NUMBER_TYPE_LONG;
+    }
+  else if (c == 'f')
+    {
+      res = NUMBER_TYPE_FLOAT;
+    }
+
+  return res;
+}
+
 struct token *
 token_make_number_for_value (unsigned long number)
 {
+  int number_type = lexer_number_type (peekc ());
+
+  if (number_type != NUMBER_TYPE_NORMAL)
+    {
+      nextc ();
+    }
+
   return token_create (
-      &(struct token){ .type = TOKEN_TYPE_NUMBER, .llnum = number });
+		       &(struct token){ .type = TOKEN_TYPE_NUMBER, .llnum = number, .num.type = number_type });
 }
 
 struct token *

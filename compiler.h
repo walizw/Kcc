@@ -13,8 +13,7 @@
 
 #include "helpers/vector.h"
 
-#define S_EQ(str, str2) \
-  (str && str2 && (strcmp (str, str2) == 0))
+#define S_EQ(str, str2) (str && str2 && (strcmp (str, str2) == 0))
 
 #define NUMERIC_CASE                                                          \
   case '0':                                                                   \
@@ -49,13 +48,13 @@
 
 #define SYMBOL_CASE                                                           \
   case '{':                                                                   \
-  case '}': \
-  case ':': \
-  case ';': \
-  case '#': \
-  case '\\': \
-  case ')': \
-  case ']' \
+  case '}':                                                                   \
+  case ':':                                                                   \
+  case ';':                                                                   \
+  case '#':                                                                   \
+  case '\\':                                                                  \
+  case ')':                                                                   \
+  case ']'
 
 struct pos
 {
@@ -185,8 +184,11 @@ struct vector *lex_process_tokens (struct lex_process *process);
 // lexer
 int lex (struct lex_process *process);
 
+// builds token for `str'
+struct lex_process *tokens_build_for_string (struct compile_process *compiler,
+                                             const char *str);
+
 // token
-_Bool
-token_is_keyword (struct token *token, const char *value);
+_Bool token_is_keyword (struct token *token, const char *value);
 
 #endif

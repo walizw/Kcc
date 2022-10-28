@@ -173,6 +173,10 @@ struct compile_process
 
   // vector of tokens
   struct vector *token_vec;
+
+  struct vector *node_vec;
+  struct vector *node_tree_vec; // root of the tree
+
   FILE *out_file;
 };
 
@@ -189,6 +193,12 @@ char compile_process_peek_char (struct lex_process *lex_process);
 void compile_process_push_char (struct lex_process *lex_process, char c);
 
 // parser
+enum
+{
+  PARSE_ALL_OK,
+  PARSE_GENERAL_ERROR
+};
+
 enum
 {
   NODE_TYPE_EXPRESSION,
@@ -239,7 +249,8 @@ struct node
     struct node *function;
   } binded;
 
-  union {
+  union
+  {
     char cval;
     const char *sval;
     unsigned int inum;
@@ -247,6 +258,9 @@ struct node
     unsigned long long llnum;
   };
 };
+
+int
+parse (struct compile_process *process);
 
 // lex_process
 struct lex_process *

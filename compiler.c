@@ -63,7 +63,11 @@ compile_file (const char *fname, const char *out_fname, int flags)
 
   process->token_vec = lex_process->token_vec;
 
-  // TODO: Parsing
+  // Parsing
+  if (parse (process) != PARSE_ALL_OK)
+    {
+      return COMPILER_FAILED_WITH_ERRORS;
+    }
 
   // TODO: Code generation
 

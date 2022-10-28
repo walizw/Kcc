@@ -1,1 +1,5 @@
-int x = 583L;
+int
+main (void)
+{
+  return 0;
+}

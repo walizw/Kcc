@@ -4,12 +4,13 @@ CC=gcc
 ECHO=echo
 
 OBJS=build/compiler.o build/cprocess.o build/lex_process.o build/lexer.o \
-	build/token.o build/parser.o build/helpers/buffer.o \
+	build/token.o build/parser.o build/node.o build/helpers/buffer.o \
 	build/helpers/vector.o
 INCLUDES=-I./
 
 all: $(OBJS)
-	$(CC) main.c $(OBJS) $(INCLUDES) -g -o $(PROGRAM_NAME)
+	@$(ECHO) "Linking Kcc"
+	@$(CC) main.c $(OBJS) $(INCLUDES) -g -o $(PROGRAM_NAME)
 
 build/compiler.o: compiler.c
 	@$(ECHO) "CC\t\t"$<
@@ -32,6 +33,10 @@ build/token.o: token.c
 	@$(CC) $(INCLUDES) $< -o $@ -g -c
 
 build/parser.o: parser.c
+	@$(ECHO) "CC\t\t"$<
+	@$(CC) $(INCLUDES) $< -o $@ -g -c
+
+build/node.o: node.c
 	@$(ECHO) "CC\t\t"$<
 	@$(CC) $(INCLUDES) $< -o $@ -g -c
 

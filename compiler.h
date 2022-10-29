@@ -9,6 +9,7 @@
 #define __COMPILE_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "helpers/vector.h"
@@ -278,5 +279,15 @@ struct lex_process *tokens_build_for_string (struct compile_process *compiler,
 
 // token
 _Bool token_is_keyword (struct token *token, const char *value);
+_Bool token_is_nl_or_comment_or_nl_separator (struct token *token);
+_Bool token_is_symbol (struct token *token, char c);
+
+// node
+void node_set_vector (struct vector *vec, struct vector *root_vec);
+void node_push (struct node *node);
+struct node *node_peek ();
+struct node *node_peek_or_null ();
+struct node *node_pop ();
+struct node *node_create (struct node *_node);
 
 #endif

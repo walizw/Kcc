@@ -1,3 +1,9 @@
+/*
+ * parser.c - Parses a vector of tokens.
+ *
+ * Copyright (C) 2022 walizw <yojan.bustamante@udea.edu.co>
+ */
+
 #include "compiler.h"
 
 static struct compile_process *current_process;

@@ -1,3 +1,9 @@
+/*
+ * node.c - Generic functions to manage nodes of the AST.
+ *
+ * Copyright (C) 2022 walizw <yojan.bustamante@udea.edu.co>
+ */
+
 #include "compiler.h"
 #include <assert.h>
 

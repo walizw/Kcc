@@ -259,8 +259,7 @@ struct node
   };
 };
 
-int
-parse (struct compile_process *process);
+int parse (struct compile_process *process);
 
 // lex_process
 struct lex_process *

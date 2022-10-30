@@ -150,8 +150,8 @@ token_make_number_for_value (unsigned long number)
       nextc ();
     }
 
-  return token_create (
-		       &(struct token){ .type = TOKEN_TYPE_NUMBER, .llnum = number, .num.type = number_type });
+  return token_create (&(struct token){
+      .type = TOKEN_TYPE_NUMBER, .llnum = number, .num.type = number_type });
 }
 
 struct token *
@@ -238,7 +238,7 @@ read_op ()
 
   if (!op_treated_as_one (op))
     {
-      op - peekc ();
+      op = peekc ();
       if (is_single_operator (op))
         {
           buffer_write (buffer, op);

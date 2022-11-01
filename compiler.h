@@ -8,6 +8,8 @@
 #ifndef __COMPILER_H
 #define __COMPILE_H
 
+#include <assert.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -309,5 +311,21 @@ void make_exp_node (struct node *left_node, struct node *right_node,
 
 _Bool node_is_expressionable (struct node *node);
 struct node *node_peek_expressionable_or_null ();
+
+// expressionable
+#define TOTAL_OPERATOR_GROUPS 14
+#define MAX_OPERATORS_IN_GROUP 12
+
+enum
+{
+  ASSOCIATIVITY_LEFT_TO_RIGHT,
+  ASSOCIATIVITY_RIGHT_TO_LEFT
+};
+
+struct expressionable_op_precedence_group
+{
+  char *operators[MAX_OPERATORS_IN_GROUP];
+  int associativity; // left to right or right to left
+};
 
 #endif

@@ -183,6 +183,77 @@ struct compile_process
   FILE *out_file;
 };
 
+enum
+{
+  DATATYPE_FLAG_IS_SIGNED = 0b00000001,
+  DATATYPE_FLAG_IS_STATIC = 0b00000010,
+  DATATYPE_FLAG_IS_CONST = 0b00000100,
+  DATATYPE_FLAG_IS_POINTER = 0b00001000,
+  DATATYPE_FLAG_IS_ARRAY = 0b00010000,
+  DATATYPE_FLAG_IS_EXTERN = 0b00100000,
+  DATATYPE_FLAG_IS_RESTRICT = 0b01000000,
+  DATATYPE_FLAG_IGNORE_TYPE_CHECKING = 0b10000000,
+  DATATYPE_FLAG_IS_SECONDARY = 0b100000000,
+  DATATYPE_FLAG_STRUCT_UNION_NO_NAME = 0b1000000000,
+  DATATYPE_FLAG_IS_LITERAL = 0b10000000000
+};
+
+enum
+{
+  DATA_TYPE_VOID,
+  DATA_TYPE_CHAR,
+  DATA_TYPE_SHORT,
+  DATA_TYPE_INTEGER,
+  DATA_TYPE_LONG,
+  DATA_TYPE_FLOAT,
+  DATA_TYPE_DOUBLE,
+  DATA_TYPE_STRUCT,
+  DATA_TYPE_UNION,
+  DATA_TYPE_UNKNOWN
+};
+
+struct datatype
+{
+  int flags;
+
+  // i.e long, int, etc;
+  int type;
+
+  // i.e. long long, struct my_struct
+  struct datatype *secondary;
+
+  // i.e "int"
+  const char *type_str;
+
+  // the size of the datatype
+  size_t size;
+
+  // i.e. int *** would be pointer_depth 3
+  int pointer_depth;
+
+  union
+  {
+    struct node *struct_node;
+    struct node *union_node;
+  };
+};
+
+enum
+{
+  DATA_TYPE_EXPECT_PRIMITIVE,
+  DATA_TYPE_EXPECT_UNION,
+  DATA_TYPE_EXPECT_STRUCT
+};
+
+enum
+{
+  DATA_SIZE_ZERO = 0,
+  DATA_SIZE_BYTE = 1,
+  DATA_SIZE_WORD = 2,
+  DATA_SIZE_DWORD = 4,
+  DATA_SIZE_DDWORD = 8
+};
+
 void compiler_error (struct compile_process *compiler, const char *msg, ...);
 void compiler_warning (struct compile_process *compiler, const char *msg, ...);
 int compile_file (const char *fname, const char *out_fname, int flags);
@@ -295,9 +366,12 @@ struct lex_process *tokens_build_for_string (struct compile_process *compiler,
                                              const char *str);
 
 // token
+_Bool keyword_is_datatype (const char *str);
 _Bool token_is_keyword (struct token *token, const char *value);
 _Bool token_is_nl_or_comment_or_nl_separator (struct token *token);
 _Bool token_is_symbol (struct token *token, char c);
+_Bool token_is_operator (struct token *tok, const char *val);
+_Bool token_is_primitive_keyword (struct token *token);
 
 // node
 void node_set_vector (struct vector *vec, struct vector *root_vec);
@@ -327,5 +401,8 @@ struct expressionable_op_precedence_group
   char *operators[MAX_OPERATORS_IN_GROUP];
   int associativity; // left to right or right to left
 };
+
+// datatype
+_Bool datatype_is_struct_or_union_for_name (const char *name);
 
 #endif

@@ -5,7 +5,7 @@ ECHO=echo
 
 OBJS=build/compiler.o build/cprocess.o build/lex_process.o build/lexer.o \
 	build/token.o build/parser.o build/node.o build/expressionable.o \
-	build/helpers/buffer.o build/helpers/vector.o
+	build/datatype.o build/helpers/buffer.o build/helpers/vector.o
 INCLUDES=-I./
 
 all: $(OBJS)
@@ -42,6 +42,10 @@ build/node.o: node.c
 	@$(CC) $(INCLUDES) $< -o $@ -g -c
 
 build/expressionable.o: expressionable.c
+	@$(ECHO) "CC\t\t"$<
+	@$(CC) $(INCLUDES) $< -o $@ -g -c
+
+build/datatype.o: datatype.c
 	@$(ECHO) "CC\t\t"$<
 	@$(CC) $(INCLUDES) $< -o $@ -g -c
 

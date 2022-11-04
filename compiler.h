@@ -162,6 +162,19 @@ enum
   LEXICAL_ANALYSIS_INPUT_ERROR
 };
 
+struct scope
+{
+  int flags;
+
+  // a vector of void ptrs
+  struct vector *entities;
+
+  // total number of bytes of this scope (aligned to 16 bytes)
+  size_t size;
+
+  struct scope *parent;
+};
+
 struct compile_process
 {
   // this will determine how code must be compiled
@@ -181,6 +194,12 @@ struct compile_process
   struct vector *node_tree_vec; // root of the tree
 
   FILE *out_file;
+
+  struct
+  {
+    struct scope *root;
+    struct scope *current;
+  } scope;
 };
 
 enum
@@ -404,5 +423,7 @@ struct expressionable_op_precedence_group
 
 // datatype
 _Bool datatype_is_struct_or_union_for_name (const char *name);
+
+// scope
 
 #endif

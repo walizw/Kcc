@@ -5,7 +5,7 @@ ECHO=echo
 
 OBJS=build/compiler.o build/cprocess.o build/lex_process.o build/lexer.o \
 	build/token.o build/parser.o build/node.o build/expressionable.o \
-	build/datatype.o build/scope.o build/helpers/buffer.o \
+	build/datatype.o build/scope.o build/symres.o build/helpers/buffer.o \
 	build/helpers/vector.o
 INCLUDES=-I./
 
@@ -51,6 +51,10 @@ build/datatype.o: datatype.c
 	@$(CC) $(INCLUDES) $< -o $@ -g -c
 
 build/scope.o: scope.c
+	@$(ECHO) "CC\t\t"$<
+	@$(CC) $(INCLUDES) $< -o $@ -g -c
+
+build/symres.o: symres.c
 	@$(ECHO) "CC\t\t"$<
 	@$(CC) $(INCLUDES) $< -o $@ -g -c
 

@@ -546,11 +546,37 @@ parse_datatype (struct datatype *dtype)
   parse_datatype_modifiers (dtype);
 }
 
+_Bool
+parser_is_int_valid_after_datatype (struct datatype *dtype)
+{
+  return dtype->type == DATA_TYPE_LONG || dtype->type == DATA_TYPE_FLOAT
+         || dtype->type == DATA_TYPE_DOUBLE;
+}
+
+void
+parser_ignore_int (struct datatype *dtype)
+{
+  // ignores int on cases like `long int'
+  if (!token_is_keyword (token_peek_next (), "int"))
+    return;
+
+  if (!parser_is_int_valid_after_datatype (dtype))
+    {
+      compiler_error (current_process, "Int is not valid secondary datatype");
+    }
+
+  // ignore the int token
+  token_next ();
+}
+
 void
 parse_variable_function_or_struct_union (struct history *history)
 {
   struct datatype dtype;
   parse_datatype (&dtype);
+
+  // ignore ints if necessary
+  parser_ignore_int (&dtype);
 }
 
 void

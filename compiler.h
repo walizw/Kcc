@@ -378,6 +378,13 @@ struct node
       struct node *right;
       const char *op;
     } exp;
+
+    struct var
+    {
+      struct datatype type;
+      const char *name;
+      struct node *val;
+    } var;
   };
 
   union
